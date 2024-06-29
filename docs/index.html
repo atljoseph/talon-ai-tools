@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue with Nord Colors</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2e3440;
+            color: #d8dee9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .required {
+            background-color: #5e81ac;
+            color: #2e3440;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .optional {
+            background-color: #ebcb8b;
+            color: #2e3440;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        p {
+            text-align: center;
+            margin: 0;
+            font-size: 14px;
+        }
+        .custom-dropdown {
+            position: relative;
+            width: 200px;
+        }
+        .custom-dropdown .dropdown-header {
+            border: 1px solid #3b4252;
+            color: #d8dee9;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .custom-dropdown .dropdown-list {
+            position: absolute;
+            width: 100%;
+            background-color: #4c566a;
+            border: 1px solid #3b4252;
+            border-radius: 5px;
+            margin-top: 5px;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+        }
+        .custom-dropdown.open .dropdown-list {
+            display: block;
+        }
+        .custom-dropdown .dropdown-list::-webkit-scrollbar {
+            width: 0;
+            background: transparent;
+        }
+        .custom-dropdown .dropdown-list .dropdown-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .custom-dropdown .dropdown-list .dropdown-item:hover {
+            background-color: #3b4252;
+        }
+    </style>
+</head>
+<body>
+    <h1>Talon-AI-Tools Grammar Explorer</h1>
+    <div id="app">
+        <div class="container">
+            <div class="required">
+                <b>Model</b>
+            </div>
+
+            <custom-dropdown
+                title="Prompt Name"
+                :options="modelOptions"
+            ></custom-dropdown>
+
+            <div class="optional">
+                <i>this</i>
+            </div>
+
+            <custom-dropdown
+                title="Insertion Method"
+                :options="insertionOptions"
+            ></custom-dropdown>
+        </div>
+    </div>
+
+    <script>
+        Vue.component("custom-dropdown", {
+            props: ["title", "options"],
+            data() {
+                return {
+                    isOpen: false,
+                    selectedOption: null,
+                };
+            },
+            methods: {
+                toggleDropdown() {
+                    this.isOpen = !this.isOpen;
+                },
+                selectOption(option) {
+                    this.selectedOption = option;
+                    this.isOpen = false;
+                },
+                getTitle() {
+                    if (this.selectedOption) {
+                        return this.selectedOption.name;
+                    } else {
+                        return this.title;
+                    }
+                },
+            },
+            template: `
+        <div class="custom-dropdown" :class="{ open: isOpen }">
+          <div class="dropdown-header" @click="toggleDropdown">{{ getTitle() }}</div>
+          <div class="dropdown-list">
+            <div class="dropdown-item" v-for="option in options" :key="option.name" @click="selectOption(option)">
+              {{ option.name }}
+            </div>
+          </div>
+        </div>
+      `,
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                modelOptions: [
+                    { name: "Option 1", value: "Option 1" },
+                    { name: "Option 2", value: "Option 2" },
+                    { name: "Option 3", value: "Option 3" },
+                ],
+                insertionOptions: [
+                    { name: "Above", value: "above" },
+                    { name: "Below", value: "below" },
+                    { name: "Clipped", value: "clipped" },
+                    { name: "Browser", value: "browser" },
+                ],
+            },
+        });
+    </script>
+</body>
+</html>
