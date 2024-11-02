@@ -5,7 +5,12 @@ settings():
     # user.model_temperature = 0.6
 
     # Works with any API with the same schema as OpenAI's (i.e. Azure, llamafiles, etc.)
-    # user.model_endpoint = "https://api.openai.com/v1/chat/completions"
+    # If not set, defaults to os.environ["OPENAI_API_BASE"].
+    # user.model_base_url = "http://012.123.456.789:11434"
+    # user.model_base_url = "https://api.openai.com"
+
+    # If not set, default is "v1/chat/completions".
+    # user.model_endpoint = "v1/chat/completions"
 
     # user.model_system_prompt = "You are an assistant helping an office worker to be more productive."
 

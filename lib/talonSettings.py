@@ -1,5 +1,7 @@
 from typing import Literal
 
+import os
+
 from talon import Context, Module
 
 mod = Module()
@@ -52,8 +54,15 @@ mod.setting(
 mod.setting(
     "model_endpoint",
     type=str,
-    default="https://api.openai.com/v1/chat/completions",
-    desc="The endpoint to send the model requests to",
+    default="v1/chat/completions",
+    desc="The endpoint to send the model requests to (after the base URL)",
+)
+
+mod.setting(
+    "model_base_url",
+    type=str,
+    default=os.environ["OPENAI_API_BASE"],
+    desc="The base URL to send the model requests to",
 )
 
 mod.setting(

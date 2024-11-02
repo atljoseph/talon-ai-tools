@@ -174,15 +174,18 @@ def send_request(
     if tools is not None:
         data["tools"] = tools
 
-    url: str = settings.get("user.model_endpoint")  # type: ignore
+    base_url: str = settings.get("user.model_base_url")  # type: ignore
+    endpoint: str = settings.get("user.model_endpoint")  # type: ignore
     headers = {"Content-Type": "application/json"}
     # If the model endpoint is Azure, we need to use a different header
-    if "azure.com" in url:
+    if "azure.com" in base_url:
         headers["api-key"] = TOKEN
     else:
         headers["Authorization"] = f"Bearer {TOKEN}"
+    print(f"BASE_URL:{base_url}")
+    print(f"ENDPOINT:{endpoint}")
 
-    raw_response = requests.post(url, headers=headers, data=json.dumps(data))
+    raw_response = requests.post(base_url + "/" + endpoint, headers=headers, data=json.dumps(data))
 
     match raw_response.status_code:
         case 200:
