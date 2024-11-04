@@ -61,7 +61,7 @@ mod.setting(
 mod.setting(
     "model_base_url",
     type=str,
-    default=os.environ["OPENAI_API_BASE"],
+    default=None,
     desc="The base URL to send the model requests to",
 )
 

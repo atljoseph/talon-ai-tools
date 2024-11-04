@@ -53,7 +53,13 @@ def get_token() -> str:
         message = "GPT Failure: env var OPENAI_API_KEY is not set."
         notify(message)
         raise Exception(message)
-
+    
+def get_url() -> str:
+    """Get the OpenAI API url from the environment"""
+    try:
+        return os.environ["OPENAI_API_BASE"]
+    except KeyError:
+        return settings.get("user.model_base_url")
 
 def format_messages(
     role: Literal["user", "system", "assistant"], messages: list[GPTMessageItem]
@@ -105,6 +111,7 @@ def send_request(
 
     notify(notification)
     TOKEN = get_token()
+    BASE_URL = get_url()
 
     language = actions.code.language()
     language_context = (
@@ -174,18 +181,17 @@ def send_request(
     if tools is not None:
         data["tools"] = tools
 
-    base_url: str = settings.get("user.model_base_url")  # type: ignore
     endpoint: str = settings.get("user.model_endpoint")  # type: ignore
     headers = {"Content-Type": "application/json"}
     # If the model endpoint is Azure, we need to use a different header
-    if "azure.com" in base_url:
+    if "azure.com" in BASE_URL:
         headers["api-key"] = TOKEN
     else:
         headers["Authorization"] = f"Bearer {TOKEN}"
-    print(f"BASE_URL:{base_url}")
+    print(f"BASE_URL:{BASE_URL}")
     print(f"ENDPOINT:{endpoint}")
 
-    raw_response = requests.post(base_url + "/" + endpoint, headers=headers, data=json.dumps(data))
+    raw_response = requests.post(BASE_URL + "/" + endpoint, headers=headers, data=json.dumps(data))
 
     match raw_response.status_code:
         case 200:
