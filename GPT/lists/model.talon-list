@@ -3,3 +3,4 @@ list: user.model
 
 # The default model name
 model: model
+hal: model
